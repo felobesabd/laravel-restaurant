@@ -1,5 +1,8 @@
 <div>
-    <input type="text" class="form-control" placeholder="Search..." id="search">
+    <form id="formSearch">
+        @csrf
+        <input type="text" name="search" class="form-control" placeholder="Search..." id="search">
+    </form>
 </div>
 <div class="d-flex my-3">
     <div>

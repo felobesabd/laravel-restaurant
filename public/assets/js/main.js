@@ -80,22 +80,20 @@ $(document).ready(function() {
     });
 
     $('#search').keyup(function () {
-        var search_val = $(this).val();
         var route = $('.getItemsSearch').val();
 
-        alert(search_val);
+        var form = $('#formSearch');
+        var formData = new FormData(form[0]);
 
         $.ajax({
             url: route,
             type: 'POST',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                search: search_val
-            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
             success: function(response) {
-                if(response.success) {
-                    $('#orderMessage').show();
-                }
+                $('#menu-items-custom').append(response);
             },
             error: function(response) {
                 // Handle error

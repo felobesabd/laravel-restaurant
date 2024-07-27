@@ -17,13 +17,7 @@
         </div>
 
         <input type="hidden" class="orderStoreLink" value="{{ route('order.store') }}">
-        <input type="hidden" class="getItemsSearch" value="{{ route('getItems.search') }}">
+        <input type="hidden" class="getItemsSearch" value="{{ route('items.search') }}">
         <input type="hidden" class="getClient" value="{{ route('client.get') }}">
     </div>
-@stop
-
-@section('scripts')
-    <script>
-
-    </script>
 @stop

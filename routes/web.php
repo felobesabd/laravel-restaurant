@@ -27,7 +27,7 @@ Route::group(['prefix' => 'menu-items', 'namespace' => 'App\Http\Controllers'], 
 });
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
-    Route::post('getItemsBySearch', 'MenuItemController@getItemsBySearch')->name('getItems.search');
+    Route::post('getItemsSearch', 'MenuItemController@itemSearch')->name('items.search');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {

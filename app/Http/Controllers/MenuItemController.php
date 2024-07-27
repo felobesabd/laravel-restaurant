@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repository\Impl\MenuItemRepo;
+use Illuminate\Http\Request;
 
 class MenuItemController extends Controller
 {
@@ -15,10 +16,8 @@ class MenuItemController extends Controller
        $this->menuItemRepo = $menuItemRepo;
     }
 
-    public function getItemsBySearch($search)
+    public function itemSearch(Request $request)
     {
-        return $search;
-        $menuItems = $this->menuItemRepo->search($search);
-        return view('cashier.index', compact('menuItems'));
+        return $menuItems = $this->menuItemRepo->search($request->search);
     }
 }
