@@ -18,14 +18,21 @@ class OrderDetailsRepo implements IOrderDetailsRepo
         return OrderDetails::where('id', $id)->first();
     }
 
-    public function create(OrderDetailsDto $orderDetailsDto)
+    public function create(OrderDetailsDto $orderDetailsDto, $prices)
     {
-        return OrderDetails::create([
-            'order_id' => $orderDetailsDto->getOrderId(),
-            'item_id' => $orderDetailsDto->getItemId(),
-            'quantity' => $orderDetailsDto->getQuantity(),
-            'price' => $orderDetailsDto->getPrice(),
-        ]);
+        $itemIds = $orderDetailsDto->getItemId();
+        $quantities = $orderDetailsDto->getQuantity();
+
+         foreach ($itemIds as $index => $itemId) {
+             $orderDetails[] = OrderDetails::create([
+                 'order_id' => $orderDetailsDto->getOrderId(),
+                 'client_id' => $orderDetailsDto->getClientId(),
+                 'item_id' => $itemId,
+                 'quantity' => $quantities[$index],
+                 'price' => intval($prices[$index] * $quantities[$index]),
+             ]);
+         }
+         return $orderDetails;
     }
 
     public function update($id, OrderDetailsDto $orderDetailsDto)
@@ -39,5 +46,10 @@ class OrderDetailsRepo implements IOrderDetailsRepo
     {
         $orderDetails = $this->find($id);
         return $orderDetails->delete();
+    }
+
+    public function getTotalPrice($orderId)
+    {
+        return $totalPrice = OrderDetails::where('order_id', $orderId)->sum('price');
     }
 }

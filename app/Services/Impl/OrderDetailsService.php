@@ -4,26 +4,31 @@
 namespace App\Services\Impl;
 
 use App\DTO\OrderDetailsDto;
+use App\Repository\Impl\ClientRepo;
 use App\Repository\Impl\MenuItemRepo;
 use App\Repository\Impl\OrderRepo;
 use App\Repository\IOrderDetailsRepo;
 use App\Services\IOrderDetailsService;
+use Illuminate\Support\Facades\DB;
 
 class OrderDetailsService implements IOrderDetailsService
 {
     protected IOrderDetailsRepo $orderDetailsRepo;
     protected OrderRepo $orderRepo;
     protected MenuItemRepo $itemRepo;
+    protected ClientRepo $clientRepo;
 
     public function __construct(
         IOrderDetailsRepo $orderDetailsRepo,
         OrderRepo $orderRepo,
-        MenuItemRepo $itemRepo
+        MenuItemRepo $itemRepo,
+        ClientRepo $clientRepo
     )
     {
         $this->orderDetailsRepo = $orderDetailsRepo;
         $this->orderRepo = $orderRepo;
         $this->itemRepo = $itemRepo;
+        $this->clientRepo = $clientRepo;
     }
 
     public function getOrdersDetails()
@@ -38,16 +43,41 @@ class OrderDetailsService implements IOrderDetailsService
 
     public function createOrderDetails(OrderDetailsDto $orderDetailsDto)
     {
+        DB::beginTransaction();
+        // create order, add order to Dto and get him from Dto
+        $order = $this->orderRepo->create($orderDetailsDto);
+        $orderDetailsDto->setOrderId($order->id);
+        $order_id = $orderDetailsDto->getOrderId();
 
-//        $order = $this->orderRepo->create($orderDetailsDto);
+        // get client by phone, get phone from Dto
+        $phone = $orderDetailsDto->getPhone();
+        $client = $this->clientRepo->find($phone);
+        $orderDetailsDto->setClientId($client->id);
 
+        // get itemIds from Dto, get MenuItems by itemIds, loop on MenuItems => (get prices)
         $itemIds = $orderDetailsDto->getItemId();
         foreach ($itemIds as $itemId) {
-            $menuItem = $this->itemRepo->find($itemId);
-            dump($menuItem);
+            $menuItems[] = $this->itemRepo->find($itemId);
+        }
+        foreach ($menuItems as $menuItem) {
+            foreach ($menuItem as $item) {
+                if (isset($item['price'])) {
+                    $prices[] = $item['price'];
+                }
+            }
         }
 
-        //return $order;
+        $orderDetails = $this->orderDetailsRepo->create($orderDetailsDto, $prices);
+        $totalPrice = $this->orderDetailsRepo->getTotalPrice($order_id);
+        $orderDetailsDto->setTotalPrice($totalPrice);
+
+        $updateTotalPrice = $this->orderRepo->update($order_id, $orderDetailsDto);
+
+        DB::commit();
+        return [
+            'orders' => $orderDetails,
+            'totalPrice' => $totalPrice
+        ];
     }
 
     public function updateOrderDetails($id, OrderDetailsDto $orderDetailsDto)

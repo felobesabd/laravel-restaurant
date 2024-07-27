@@ -29,7 +29,10 @@ class OrderRepo implements IOrderRepo
     public function update($id, OrderDetailsDto $orderDto)
     {
         $order = $this->find($id);
-        $order->update($orderDto);
+        $order->update([
+            'phone' => $orderDto->getPhone(),
+            'total_price' => $orderDto->getTotalPrice(),
+        ]);
         return $order;
     }
 

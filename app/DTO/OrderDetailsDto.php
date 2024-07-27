@@ -7,6 +7,7 @@ class OrderDetailsDto
     private string $phone;
     private int $TotalPrice;
     private int $orderId;
+    private int $clientId;
     private array $itemId;
     private array $quantity;
 
@@ -28,7 +29,7 @@ class OrderDetailsDto
 
     public function setTotalPrice(int $TotalPrice): self
     {
-        $this->TotalPrice = $TotalPrice;
+        $this->TotalPrice = intval($TotalPrice);
         return $this;
     }
 
@@ -40,6 +41,17 @@ class OrderDetailsDto
     public function setOrderId(int $orderId): self
     {
         $this->orderId = $orderId;
+        return $this;
+    }
+
+    public function getClientId(): int
+    {
+        return $this->clientId;
+    }
+
+    public function setClientId(int $clientId): self
+    {
+        $this->clientId = $clientId;
         return $this;
     }
 
