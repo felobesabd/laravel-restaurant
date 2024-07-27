@@ -26,4 +26,10 @@ Route::group(['prefix' => 'menu-items', 'namespace' => 'App\Http\Controllers'], 
     Route::get('delete/{id}', 'OrderController@destroy')->name('menu-items.destroy');
 });
 
-Route::get('getClient', 'OrderController@show')->name('client.show');
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
+    Route::post('getItemsBySearch', 'MenuItemController@getItemsBySearch')->name('getItems.search');
+});
+
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
+    Route::post('getClient', 'ClientController@getClient')->name('client.get');
+});

@@ -22,7 +22,7 @@ class OrderRepo implements IOrderRepo
     {
         return Order::create([
             'phone' => $orderDto->getPhone(),
-            'total_price' => $orderDto->getTotalPrice(),
+            'total_price' => 0.00,
         ]);
     }
 

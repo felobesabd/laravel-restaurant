@@ -1,177 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Cashier</title>
+@extends('layouts.app')
 
-    <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
-    <script src="{{asset('assets/js/main.js')}}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
-</head>
-<body>
-<div class="container-fluid">
-    <!-- Navbar/Header -->
-    <div class="row bg-primary text-white p-3">
-        <div class="col-md-6 d-flex align-items-center">
-            <img src="{{asset('assets/images/pizza.png')}}" alt="Logo" class="me-2" style="width: 50px;">
-            <h4>SI Restaurant</h4>
-        </div>
-        <div class="col-md-6 text-end d-flex justify-content-end align-items-center">
-            <h4 class="me-2">CASHIER</h4>
-            <button class="btn btn-light me-2"><i class="bi bi-gear"></i></button>
-            <button class="btn btn-light"><i class="bi bi-x"></i></button>
-        </div>
-    </div>
-
+@section('content')
     <div class="row mt-3">
         <!-- Order Summary Section -->
-        <div class="col-md-4">
-            <div class="bg-light p-3">
-                <h5>Order Summary</h5>
-                <form id="orderForm">
-                    @csrf
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" id="phone" name="phone" class="form-control">
-                    </div>
-                </form>
-                <br>
-
-                <div id="orderMessage" style="display:none;" class="alert alert-success mt-3">
-                    Order added successfully!
-                </div>
-                <div id="order-summary">
-                    <!-- Order items will be dynamically inserted here -->
-                </div>
-                <div class="d-flex justify-content-between my-2">
-                    <span>Total Items:</span>
-                    <span id="total-items">8</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>Food:</span>
-                    <span id="total-food">5</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>Drink:</span>
-                    <span id="total-drink">3</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>Dessert:</span>
-                    <span id="total-dessert">0</span>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Total:</span>
-                    <span id="total-price" class="text-primary">Rp. 102,750</span>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <button class="btn btn-danger">Remove</button>
-                    <button class="btn btn-secondary">Clear</button>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Client phone:</span><span id="clientName"></span>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="add-order">Add order</button>
-                </div>
-            </div>
-        </div>
+        @include('order.order-summary')
 
         <!-- Menu Section -->
-        <div class="col-md-8">
-            <div class="bg-light p-3">
-                <div>
-                    <input type="text" class="form-control" placeholder="Search...">
-                </div>
-                <div class="d-flex my-3">
-                    <div>
-                        <button class="btn btn-outline-secondary">All</button>
-                        <button class="btn btn-outline-secondary">Food</button>
-                        <button class="btn btn-outline-secondary">Drinks</button>
-                        <button class="btn btn-outline-secondary">Desserts</button>
-                    </div>
-                </div>
-                <div class="row" id="menu-items-custom">
-                    @foreach ($menuItems as $menuItem)
-                        <div class="col-md-4 menu-item">
-                            <img src="{{ $menuItem->image }}" alt="{{ $menuItem->image }}" width="100%" height="200">
-                            <h5 class="name">{{ $menuItem->name }}</h5>
-                            <div class="d-flex justify-content-between align-items-baseline">
-                                <p class="item-price">{{ $menuItem->price }}</p>
-                                <button class="btn btn-primary add-item" data-item-id="{{ $menuItem->id }}">Add Item</button>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+        @include('menu_items.index')
+
+        <div class="order-item" style="display: none;">
+            <input type="hidden" name="item_id[]" value="" class="item-id">
+            <span class="item-name"></span>
+            <input type="number" class="input-quantity" name="quantity[]" value="1">
+            <span class="item-price"></span>
+            <span class="btn btn-danger btn-delete" id="delete">delete</span>
         </div>
+
+        <input type="hidden" class="orderStoreLink" value="{{ route('order.store') }}">
+        <input type="hidden" class="getItemsSearch" value="{{ route('getItems.search') }}">
+        <input type="hidden" class="getClient" value="{{ route('client.get') }}">
     </div>
-</div>
+@stop
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-<script>
-    $(document).ready(function() {
-        $('.add-item').on('click', function () {
-            var itemId = $(this).attr('data-item-id');
-            var price = $(this).prev().text();
-            // use chat gpt only next line
-            var itemName = $(this).closest('.menu-item').find('.name').text();
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.add-item').on('click', function () {
+                var itemId = $(this).attr('data-item-id');
+                var price = $(this).prev().text();
+                // use chat gpt only next line
+                var itemName = $(this).closest('.menu-item').find('.name').text();
 
-            var orderItem = `
-                <div class="order-item">
-                    <input type="hidden" name="itemId" value="${itemId}" class="item-id">
-                    <span class="item-name">${itemName}</span>
-                    <input type="number" class="input-quantity">
-                    <span class="item-price">${price}</span>
-                    <span class="btn btn-danger btn-delete" id="delete">delete</span>
-                </div>
-            `;
+                var orderItem = $(".order-item").clone().first().show();
+                $('.item-id', orderItem).val(itemId);
+                $('.item-name', orderItem).text(itemName);
+                $('.item-price', orderItem).text(price);
 
-            $('#order-summary').append(orderItem);
+                $('#order-summary').append(orderItem);
+            });
 
-        });
+            $('#phone').blur(function () {
+                var phone_num = $(this).val();
 
-        $('#phone').blur(function () {
-            var phone_num = $(this).val();
+                var form = $('#orderForm');
+                var formData = new FormData(form[0]);
 
-            $.ajax({
-                url: '{{ route('order.store') }}',
-                type: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    phone: phone_num
-                },
-                success: function(response) {
-                    if(response.success) {
-                        $('#orderMessage').show();
+                $('.clientName').val(phone_num);
+
+                $.ajax({
+                    url: '{{ route('client.get') }}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function(response) {
+                        $('.nameClient').html(response.name);
+                        $('.address').html(response.address);
+                    },
+                    error: function(response) {
+                        alert('An error occurred. Please try again.');
                     }
-                },
-                error: function(response) {
-                    // Handle error
-                    alert('An error occurred. Please try again.');
+                });
+            });
+
+            $(document).on('click', '#delete', function () {
+                $(this).parent().remove();
+            });
+
+            $(document).on('click', '#add-order', function (e) {
+                e.preventDefault();
+
+                var form = $('#addOrder');
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: '{{ route('order.store') }}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function(response) {
+                        console.log('Order submitted successfully:', response);
+                        $('#order-summary').empty();
+                        $('.clientName').empty();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error submitting order:', error);
+                    }
+                });
+            });
+
+            $(document).on('click', '.filtering', function() {
+                var filterValue = $(this).attr('value');
+
+                if (filterValue === '0') {
+                    $('.menu-item').show();
+                } else {
+                    $('.menu-item').hide();
+                    $('.menu-item[data-cat-id="' + filterValue + '"]').show();
                 }
             });
-        });
 
-        $(document).on('click', '#delete', function () {
-            $(this).parent().remove();
-        });
+            $('#search').keyup(function () {
+                var search_val = $(this).val();
 
-        $(document).on('click', '#add-order', function () {
-            var itemIds = [];
-            $('.item-id').each(function() {
-                itemIds.push($(this).val());
+                alert(search_val);
+
+                $.ajax({
+                    url: '{{ route('getItems.search') }}',
+                    type: 'POST',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        search: search_val
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            $('#orderMessage').show();
+                        }
+                    },
+                    error: function(response) {
+                        // Handle error
+                        alert('An error occurred. Please try again.');
+                    }
+                });
             });
-            alert(itemIds)
         });
-    });
-
-    // $(document).ready(function() {
-    //
-    // });
-</script>
-</body>
-</html>
+    </script>
+@stop

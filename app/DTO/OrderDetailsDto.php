@@ -7,10 +7,8 @@ class OrderDetailsDto
     private string $phone;
     private int $TotalPrice;
     private int $orderId;
-    private int $itemId;
-    private int $quantity;
-    private int $price;
-
+    private array $itemId;
+    private array $quantity;
 
     public function getPhone(): string
     {
@@ -45,36 +43,25 @@ class OrderDetailsDto
         return $this;
     }
 
-    public function getItemId(): int
+    public function getItemId(): array
     {
         return $this->itemId;
     }
 
-    public function setItemId(int $itemId): self
+    public function setItemId(array $itemId): self
     {
         $this->itemId = $itemId;
         return $this;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): array
     {
         return $this->quantity;
     }
 
-    public function setQuantity(string $quantity): self
+    public function setQuantity(array $quantity): self
     {
-        $this->quantity = intval($quantity);
-        return $this;
-    }
-
-    public function getPrice(): int
-    {
-        return $this->price;
-    }
-
-    public function setPrice(int $price): self
-    {
-        $this->price = $price;
+        $this->quantity = $quantity;
         return $this;
     }
 }

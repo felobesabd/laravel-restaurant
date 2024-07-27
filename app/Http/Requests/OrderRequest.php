@@ -16,20 +16,23 @@ class OrderRequest extends FormRequest
     {
         // Define validation rules
         return [
-            'order_id' => 'required|integer',
-            'item_id' => 'required|integer',
-            'quantity' => 'nullable|integer',
-            'price' => 'required|integer',
+            'phone' => 'required|string|exists:clients,phone',
+            'item_id' => 'required|array|exists:menu_items,id',
+            'item_id.*' => 'required|exists:menu_items,id',
+            'quantity' => 'required|min:1',
+            'quantity.*' => 'required|integer|min:1',
         ];
     }
 
     public function getDto(): OrderDetailsDto
     {
         $dto = new OrderDetailsDto();
-        $dto->setItemId()
-            ->setOrderId()
-            ->setPrice()
-            ->setQuantity();
+        //$this->request->get('')
+        $dto->setItemId($this->validated('item_id'))
+            ->setQuantity($this->validated('quantity'))
+            ->setPhone($this->request->get('phone'));
+
+        return $dto;
     }
 
 }

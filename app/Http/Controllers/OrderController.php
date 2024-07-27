@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MenuItem;
+use App\Http\Requests\OrderRequest;
 use App\Repository\Impl\MenuItemRepo;
 use App\Services\Impl\OrderDetailsService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -34,9 +32,10 @@ class OrderController extends Controller
         return view('order.create', compact('menuItems'));
     }
 
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
-        return $request;
+        $order = $this->orderDetailsService->createOrderDetails($request->getDto());
+        return $order;
     }
 //
 //    public function show($id)
