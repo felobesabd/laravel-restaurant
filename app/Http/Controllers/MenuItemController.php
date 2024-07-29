@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\Impl\MenuItemRepo;
+use App\Services\IMenuItemService;
 use Illuminate\Http\Request;
 
 class MenuItemController extends Controller
 {
-    protected MenuItemRepo $menuItemRepo;
+    protected IMenuItemService $iMenuItemService;
 
     public function __construct(
-        MenuItemRepo $menuItemRepo
+        IMenuItemService $iMenuItemService
     )
     {
-       $this->menuItemRepo = $menuItemRepo;
+       $this->iMenuItemService = $iMenuItemService;
+    }
+
+    public function index()
+    {
+        $menuItems = $this->iMenuItemService->getItems();
+        return view('cashier.index', compact('menuItems'));
     }
 
     public function itemSearch(Request $request)
     {
-        return $menuItems = $this->menuItemRepo->search($request->search);
+        $menuItems = $this->iMenuItemService->itemSearch($request->search);
+        return $menuItems;
     }
 }

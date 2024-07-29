@@ -4,25 +4,25 @@
 namespace App\Services\Impl;
 
 use App\DTO\OrderDetailsDto;
-use App\Repository\Impl\ClientRepo;
-use App\Repository\Impl\MenuItemRepo;
-use App\Repository\Impl\OrderRepo;
+use App\Repository\IClientRepo;
+use App\Repository\IMenuItemRepo;
 use App\Repository\IOrderDetailsRepo;
+use App\Repository\IOrderRepo;
 use App\Services\IOrderDetailsService;
 use Illuminate\Support\Facades\DB;
 
 class OrderDetailsService implements IOrderDetailsService
 {
     protected IOrderDetailsRepo $orderDetailsRepo;
-    protected OrderRepo $orderRepo;
-    protected MenuItemRepo $itemRepo;
-    protected ClientRepo $clientRepo;
+    protected IOrderRepo $orderRepo;
+    protected IMenuItemRepo $itemRepo;
+    protected IClientRepo $clientRepo;
 
     public function __construct(
         IOrderDetailsRepo $orderDetailsRepo,
-        OrderRepo $orderRepo,
-        MenuItemRepo $itemRepo,
-        ClientRepo $clientRepo
+        IOrderRepo $orderRepo,
+        IMenuItemRepo $itemRepo,
+        IClientRepo $clientRepo
     )
     {
         $this->orderDetailsRepo = $orderDetailsRepo;
@@ -56,6 +56,8 @@ class OrderDetailsService implements IOrderDetailsService
 
         // get itemIds from Dto, get MenuItems by itemIds, loop on MenuItems => (get prices)
         $itemIds = $orderDetailsDto->getItemId();
+
+        //implement one query using whereIn
         foreach ($itemIds as $itemId) {
             $menuItems[] = $this->itemRepo->find($itemId);
         }
@@ -78,16 +80,6 @@ class OrderDetailsService implements IOrderDetailsService
             'orders' => $orderDetails,
             'totalPrice' => $totalPrice
         ];
-    }
-
-    public function updateOrderDetails($id, OrderDetailsDto $orderDetailsDto)
-    {
-        return $this->orderDetailsRepo->update($id, $orderDetailsDto);
-    }
-
-    public function deleteOrderDetails($id)
-    {
-        return $this->orderDetailsRepo->delete($id);
     }
 }
 

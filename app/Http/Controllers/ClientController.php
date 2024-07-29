@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\Impl\ClientRepo;
+use App\Services\IClientService;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    protected ClientRepo $clientRepo;
+    //TODO:phelo add service
+    //TODO:phelo add DTO
+
+    protected IClientService $iClientService;
 
     public function __construct(
-        ClientRepo $clientRepo
+        IClientService $iClientService
     )
     {
-       $this->clientRepo = $clientRepo;
+       $this->iClientService = $iClientService;
     }
 
     public function getClient(Request $request)
     {
-        $client = $this->clientRepo->find($request->phone);
+        $client = $this->iClientService->getClient($request->phone);
         return $client;
     }
 }

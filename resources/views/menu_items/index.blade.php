@@ -3,7 +3,7 @@
         @include('cashier.categories')
         <div class="row" id="menu-items-custom">
             @foreach ($menuItems as $menuItem)
-                <div class="col-md-4 menu-item" data-cat-id="{{ $menuItem->category_id }}">
+                <div class="col-md-4 menu-item" data-item-id="{{ $menuItem->id }}" data-cat-id="{{ $menuItem->category_id }}">
                     <img src="{{ $menuItem->image }}" alt="{{ $menuItem->image }}" width="100%" height="200">
                     <h5 class="name">{{ $menuItem->name }}</h5>
                     <div class="d-flex justify-content-between align-items-baseline">

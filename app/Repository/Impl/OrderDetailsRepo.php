@@ -35,19 +35,6 @@ class OrderDetailsRepo implements IOrderDetailsRepo
          return $orderDetails;
     }
 
-    public function update($id, OrderDetailsDto $orderDetailsDto)
-    {
-        $orderDetails = $this->find($id);
-        $orderDetails->update($orderDetailsDto);
-        return $orderDetails;
-    }
-
-    public function delete($id)
-    {
-        $orderDetails = $this->find($id);
-        return $orderDetails->delete();
-    }
-
     public function getTotalPrice($orderId)
     {
         return $totalPrice = OrderDetails::where('order_id', $orderId)->sum('price');

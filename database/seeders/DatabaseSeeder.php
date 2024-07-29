@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        //TODO:phleo add seeders for clients, categories, menu-items
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

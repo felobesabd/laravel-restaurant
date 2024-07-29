@@ -23,6 +23,8 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        //TODO:phelo add custom exception, and handle it here
+
         $this->reportable(function (Throwable $e) {
             //
         });

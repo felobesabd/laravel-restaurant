@@ -34,6 +34,7 @@ $(document).ready(function() {
                 $('.address').html(response.address);
             },
             error: function(response) {
+                //sweet alert
                 alert('An error occurred. Please try again.');
             }
         });
@@ -79,7 +80,8 @@ $(document).ready(function() {
         }
     });
 
-    $('#search').keyup(function () {
+    $('#search').keyup(function (e) {
+        e.preventDefault();
         var route = $('.getItemsSearch').val();
 
         var form = $('#formSearch');
@@ -93,12 +95,16 @@ $(document).ready(function() {
             contentType: false,
             cache: false,
             success: function(response) {
-                $('#menu-items-custom').append(response);
+                $('.menu-item').hide();
+                response.forEach((item)=> {
+                    $('.menu-item[data-item-id="' + item.id + '"]').show();
+                })
             },
             error: function(response) {
                 // Handle error
                 alert('An error occurred. Please try again.');
             }
         });
+        return false;
     });
 });

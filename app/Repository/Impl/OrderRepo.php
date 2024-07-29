@@ -8,11 +8,6 @@ use App\Repository\IOrderRepo;
 
 class OrderRepo implements IOrderRepo
 {
-    public function all()
-    {
-        return Order::get();
-    }
-
     public function find($id)
     {
         return Order::where('id', $id)->first();
@@ -34,11 +29,5 @@ class OrderRepo implements IOrderRepo
             'total_price' => $orderDto->getTotalPrice(),
         ]);
         return $order;
-    }
-
-    public function delete($id)
-    {
-        $order = $this->find($id);
-        return $order->delete();
     }
 }

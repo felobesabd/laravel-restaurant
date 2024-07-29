@@ -27,7 +27,6 @@ class OrderRequest extends FormRequest
     public function getDto(): OrderDetailsDto
     {
         $dto = new OrderDetailsDto();
-        //$this->request->get('')
         $dto->setItemId($this->validated('item_id'))
             ->setQuantity($this->validated('quantity'))
             ->setPhone($this->request->get('phone'));

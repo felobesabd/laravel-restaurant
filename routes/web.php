@@ -17,17 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'menu-items', 'namespace' => 'App\Http\Controllers'], function () {
-    Route::get('/', 'OrderController@index')->name('menu-items.index');
-    Route::get('create', 'OrderController@create')->name('menu-items.show');
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::post('store', 'OrderController@store')->name('order.store');
-    Route::get('edit/{id}', 'OrderController@edit')->name('menu-items.edit');
-    Route::post('update/{id}', 'OrderController@update')->name('menu-items.update');
-    Route::get('delete/{id}', 'OrderController@destroy')->name('menu-items.destroy');
 });
 
-Route::group(['namespace' => 'App\Http\Controllers'], function () {
+Route::group(['prefix' => 'menu-items', 'namespace' => 'App\Http\Controllers'], function () {
     Route::post('getItemsSearch', 'MenuItemController@itemSearch')->name('items.search');
+    Route::get('/', 'MenuItemController@index')->name('menu-items.index');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
